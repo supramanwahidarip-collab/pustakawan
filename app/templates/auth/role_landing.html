@@ -1,0 +1,33 @@
+{% extends "layouts/base.html" %}
+{% block title %}{{ portal_title }} — ToscaLib{% endblock %}
+
+{% block body %}
+<div class="min-h-full bg-slate-50 p-8">
+    <div class="mx-auto max-w-2xl rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-6">
+            <div>
+                <span class="inline-flex items-center rounded-md bg-tosca-50 px-2.5 py-1 text-xs font-bold text-tosca-700 ring-1 ring-inset ring-tosca-600/20">
+                    ROLE: {{ current_user.role | upper }}
+                </span>
+                <h1 class="mt-2 text-2xl font-bold text-slate-900">{{ portal_title }}</h1>
+            </div>
+            <form action="{{ url_for('auth.logout') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="rounded-xl bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-600 transition">
+                    Keluar (Logout)
+                </button>
+            </form>
+        </div>
+
+        <div class="mt-6 space-y-3 text-sm text-slate-600">
+            <p>Nama Lengkap : <strong class="text-slate-900">{{ current_user.full_name }}</strong></p>
+            <p>ID Keanggotaan : <strong class="font-mono text-tosca-700">{{ current_user.member_id_code }}</strong></p>
+            <p>Email : <strong class="text-slate-900">{{ current_user.email }}</strong></p>
+        </div>
+
+        <div class="mt-8 rounded-xl bg-tosca-50/70 p-4 text-xs text-tosca-900 ring-1 ring-tosca-200">
+            ✅ <strong>Fase 2 Berhasil!</strong> Sistem Otentikasi, CSRF Protection, Toast Notification, dan pemisahan Role sudah berjalan sempurna. Siap dihubungkan ke Dashboard Pustakawan di Fase 3.
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ToscaLib — Sistem Sirkulasi Perpustakaan{% endblock %}</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans untuk kesan modern & bersih -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN dengan Kustomisasi Palet Tosca -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        tosca: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e', /* Primary Brand Color */
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Alpine.js untuk interaksi halus tanpa reload -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="h-full font-sans text-slate-800 antialiased selection:bg-tosca-600 selection:text-white">
+
+    <!-- Komponen Toast Notification (Otomatis muncul saat ada flash message dari Flask) -->
+    <div aria-live="assertive" class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 z-50">
+        <div class="flex w-full flex-col items-center space-y-3 sm:items-end">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div x-data="{ show: true }"
+                             x-init="setTimeout(() => show = false, 4500)"
+                             x-show="show"
+                             x-transition:enter="transform ease-out duration-300 transition"
+                             x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-4"
+                             x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-slate-200 border-l-4
+                             {% if category == 'success' %}border-l-tosca-600{% elif category == 'danger' %}border-l-rose-600{% elif category == 'warning' %}border-l-amber-500{% else %}border-l-sky-600{% endif %}">
+                            <div class="p-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 pt-0.5">
+                                        {% if category == 'success' %}
+                                            <svg class="h-5 w-5 text-tosca-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        {% elif category == 'danger' %}
+                                            <svg class="h-5 w-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                                        {% else %}
+                                            <svg class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ml-3 w-0 flex-1">
+                                        <p class="text-sm font-semibold text-slate-900">
+                                            {% if category == 'success' %}Berhasil{% elif category == 'danger' %}Gagal{% elif category == 'warning' %}Perhatian{% else %}Informasi{% endif %}
+                                        </p>
+                                        <p class="mt-0.5 text-sm text-slate-600">{{ message }}</p>
+                                    </div>
+                                    <div class="ml-4 flex flex-shrink-0">
+                                        <button type="button" @click="show = false" class="inline-flex rounded-md bg-white text-slate-400 hover:text-slate-600">
+                                            <span class="sr-only">Tutup</span>
+                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" /></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    {% block body %}{% endblock %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% extends "layouts/base_dashboard.html" %}
+{% block title %}Riwayat Peminjaman Saya — ToscaLib{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex items-center gap-4">
+    <a href="{{ url_for('member.catalog') }}" class="rounded-full bg-slate-200 p-2 text-slate-600 hover:bg-slate-300 transition">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+    </a>
+    <div>
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">Riwayat & Status Peminjaman Saya</h1>
+        <p class="mt-1 text-sm text-slate-500">Pantau buku yang sedang Anda ajukan atau pinjam.</p>
+    </div>
+</div>
+
+<div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+            <thead class="bg-slate-50">
+                <tr>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Kode Transaksi</th>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Judul Buku</th>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Tanggal Pengajuan</th>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Batas Pengembalian</th>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 bg-white">
+                {% for loan in loans %}
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4 font-mono text-xs font-semibold text-tosca-700">
+                        {{ loan.loan_code }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="font-medium text-slate-900">{{ loan.book.title }}</div>
+                        <div class="text-xs text-slate-500">Rak: {{ loan.book.shelf_location }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 text-xs">
+                        {{ loan.request_date.strftime('%d/%m/%Y %H:%M') }}
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 text-xs font-mono">
+                        {{ loan.due_date.strftime('%d/%m/%Y') if loan.due_date else '-' }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if loan.status == 'PENDING' %}
+                            <span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">
+                                Menunggu Verifikasi Pustakawan
+                            </span>
+                        {% elif loan.status == 'BORROWED' %}
+                            <span class="inline-flex items-center rounded-full bg-tosca-50 px-2.5 py-1 text-xs font-medium text-tosca-700 ring-1 ring-inset ring-tosca-600/20">
+                                Sedang Dipinjam
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                                {{ loan.status }}
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="px-6 py-10 text-center text-slate-500">
+                        Anda belum memiliki riwayat peminjaman buku.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+</body>
+</html>

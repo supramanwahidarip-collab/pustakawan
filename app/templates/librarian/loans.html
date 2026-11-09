@@ -1,0 +1,85 @@
+{% extends "layouts/base_dashboard.html" %}
+{% block title %}Sirkulasi Peminjaman — ToscaLib{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+        <h1 class="text-2xl font-bold tracking-tight text-slate-900">Manajemen Sirkulasi Peminjaman</h1>
+        <p class="mt-1 text-sm text-slate-500">Validasi pengajuan pinjam anggota dan catat pengembalian buku.</p>
+    </div>
+
+    <!-- Filter Status -->
+    <div class="flex gap-2">
+        <a href="{{ url_for('librarian.manage_loans', status='ALL') }}" class="rounded-xl px-3.5 py-2 text-xs font-semibold {{ 'bg-tosca-700 text-white' if active_status == 'ALL' else 'bg-white text-slate-700 ring-1 ring-slate-200' }}">Semua</a>
+        <a href="{{ url_for('librarian.manage_loans', status='PENDING') }}" class="rounded-xl px-3.5 py-2 text-xs font-semibold {{ 'bg-tosca-700 text-white' if active_status == 'PENDING' else 'bg-white text-slate-700 ring-1 ring-slate-200' }}">Pending</a>
+        <a href="{{ url_for('librarian.manage_loans', status='BORROWED') }}" class="rounded-xl px-3.5 py-2 text-xs font-semibold {{ 'bg-tosca-700 text-white' if active_status == 'BORROWED' else 'bg-white text-slate-700 ring-1 ring-slate-200' }}">Dipinjam</a>
+    </div>
+</div>
+
+<div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+            <thead class="bg-slate-50">
+                <tr>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Kode & Anggota</th>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Judul Buku</th>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Tanggal Pengajuan</th>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-900">Status</th>
+                    <th scope="col" class="px-6 py-4 text-right font-semibold text-slate-900">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 bg-white">
+                {% for loan in loans %}
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4">
+                        <div class="font-mono text-xs font-semibold text-tosca-700">{{ loan.loan_code }}</div>
+                        <div class="text-xs text-slate-500">Peminjam: {{ loan.user.username }}</div>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-slate-900">
+                        {{ loan.book.title }}
+                        <div class="text-xs text-slate-400 font-normal">Rak: {{ loan.book.shelf_location }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 text-xs">
+                        {{ loan.request_date.strftime('%d/%m/%Y %H:%M') }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% if loan.status == 'PENDING' %}
+                            <span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">Pending</span>
+                        {% elif loan.status == 'BORROWED' %}
+                            <span class="inline-flex items-center rounded-full bg-tosca-50 px-2.5 py-1 text-xs font-medium text-tosca-700 ring-1 ring-inset ring-tosca-600/20">Dipinjam</span>
+                        {% elif loan.status == 'RETURNED' %}
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">Dikembalikan</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        {% if loan.status == 'PENDING' %}
+                            <form action="{{ url_for('librarian.approve_loan', loan_id=loan.id) }}" method="POST" class="inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="rounded-xl bg-tosca-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-tosca-600 transition">
+                                    Setujui Pinjam
+                                </button>
+                            </form>
+                        {% elif loan.status == 'BORROWED' %}
+                            <form action="{{ url_for('librarian.return_book', loan_id=loan.id) }}" method="POST" class="inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="rounded-xl bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white hover:bg-slate-700 transition" onclick="return confirm('Proses pengembalian buku ini?')">
+                                    Terima Kembali
+                                </button>
+                            </form>
+                        {% else %}
+                            <span class="text-xs text-slate-400 italic">Selesai</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="px-6 py-10 text-center text-slate-500">
+                        Tidak ada data sirkulasi peminjaman saat ini.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

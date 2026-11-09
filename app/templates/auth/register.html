@@ -1,0 +1,73 @@
+{% extends "layouts/base.html" %}
+{% block title %}Registrasi Anggota — ToscaLib Enterprise{% endblock %}
+
+{% block body %}
+<div class="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8 bg-slate-50">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-tosca-700 text-white shadow-md">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+            </svg>
+        </div>
+        <h2 class="mt-4 text-2xl font-bold tracking-tight text-slate-900">Pendaftaran Anggota Baru</h2>
+        <p class="mt-1 text-sm text-slate-500">Dapatkan ID Anggota otomatis untuk mulai meminjam koleksi buku</p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
+        <div class="bg-white px-6 py-8 shadow-sm ring-1 ring-slate-200/80 sm:rounded-2xl sm:px-10">
+            <form class="space-y-4" action="{{ url_for('auth.register') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600">Nama Lengkap</label>
+                    <input name="full_name" type="text" required placeholder="Contoh: Arip Supraman"
+                        class="mt-1 block w-full rounded-xl border-0 px-3.5 py-2 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-tosca-600 sm:text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600">Username</label>
+                        <input name="username" type="text" required placeholder="arip_supraman"
+                            class="mt-1 block w-full rounded-xl border-0 px-3.5 py-2 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-tosca-600 sm:text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600">No. WhatsApp / Telepon</label>
+                        <input name="phone" type="text" placeholder="0812xxxxxxx"
+                            class="mt-1 block w-full rounded-xl border-0 px-3.5 py-2 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-tosca-600 sm:text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600">Alamat Email</label>
+                    <input name="email" type="email" required placeholder="nama@email.com"
+                        class="mt-1 block w-full rounded-xl border-0 px-3.5 py-2 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-tosca-600 sm:text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600">Kata Sandi</label>
+                        <input name="password" type="password" required placeholder="Min. 6 karakter"
+                            class="mt-1 block w-full rounded-xl border-0 px-3.5 py-2 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-tosca-600 sm:text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600">Ulangi Kata Sandi</label>
+                        <input name="confirm_password" type="password" required placeholder="Ketik ulang sandi"
+                            class="mt-1 block w-full rounded-xl border-0 px-3.5 py-2 text-slate-900 ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-tosca-600 sm:text-sm">
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="flex w-full justify-center rounded-xl bg-tosca-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-tosca-600 transition">
+                        Buat Akun Keanggotaan
+                    </button>
+                </div>
+            </form>
+
+            <p class="mt-6 text-center text-sm text-slate-500">
+                Sudah memiliki akun?
+                <a href="{{ url_for('auth.login') }}" class="font-semibold text-tosca-700 hover:text-tosca-600">Masuk di sini</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

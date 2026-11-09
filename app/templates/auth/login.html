@@ -1,0 +1,107 @@
+{% extends "layouts/base.html" %}
+{% block title %}Masuk — ToscaLib Enterprise{% endblock %}
+
+{% block body %}
+<div class="flex min-h-full" x-data="{ userField: '', passField: '', showPass: false }">
+    <!-- Panel Kiri: Branding & Informasi Institusi -->
+    <div class="relative hidden w-0 flex-1 lg:block bg-gradient-to-br from-tosca-900 via-tosca-800 to-slate-900">
+        <div class="flex h-full flex-col justify-between p-12 text-white">
+            <div class="flex items-center space-x-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-tosca-500/20 ring-1 ring-tosca-400/30">
+                    <svg class="h-6 w-6 text-tosca-300" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    </svg>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-white">Tosca<span class="text-tosca-400">Lib</span></span>
+            </div>
+
+            <div class="max-w-md">
+                <span class="inline-flex items-center rounded-full bg-tosca-500/10 px-3 py-1 text-xs font-medium text-tosca-300 ring-1 ring-inset ring-tosca-400/20 mb-4">
+                    Integrated Library Management v2.0
+                </span>
+                <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl leading-tight">
+                    Manajemen Sirkulasi & Katalog Buku Digital yang Presisi.
+                </h1>
+                <p class="mt-4 text-sm leading-relaxed text-tosca-100/80">
+                    Platform terpadu untuk anggota perpustakaan dan pustakawan. Pantau ketersediaan rak secara real-time, kelola peminjaman mandiri, dan otomatisasi perhitungan masa pinjam.
+                </p>
+            </div>
+
+            <div class="flex items-center justify-between border-t border-white/10 pt-6 text-xs text-tosca-200/60">
+                <span>&copy; 2026 ToscaLib Enterprise System</span>
+                <span>Keamanan Terenkripsi &bull; Multi-Role Access</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel Kanan: Form Login -->
+    <div class="flex flex-1 flex-col justify-center px-6 py-12 lg:flex-none lg:px-20 xl:px-24 bg-white">
+        <div class="mx-auto w-full max-w-sm lg:w-96">
+            <div>
+                <h2 class="text-2xl font-bold tracking-tight text-slate-900">Masuk ke Akun Anda</h2>
+                <p class="mt-2 text-sm text-slate-500">
+                    Belum terdaftar sebagai anggota?
+                    <a href="{{ url_for('auth.register') }}" class="font-semibold text-tosca-700 hover:text-tosca-600 transition">Daftar keanggotaan baru</a>
+                </p>
+            </div>
+
+            <div class="mt-8">
+                <form action="{{ url_for('auth.login') }}" method="POST" class="space-y-5">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div>
+                        <label for="identifier" class="block text-xs font-semibold uppercase tracking-wider text-slate-600">Username atau Email</label>
+                        <div class="mt-1.5">
+                            <input id="identifier" name="identifier" type="text" x-model="userField" required autofocus
+                                placeholder="Masukkan username atau email"
+                                class="block w-full rounded-xl border-0 px-3.5 py-2.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-tosca-600 sm:text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-slate-600">Kata Sandi</label>
+                        <div class="relative mt-1.5">
+                            <input id="password" name="password" :type="showPass ? 'text' : 'password'" x-model="passField" required
+                                placeholder="••••••••"
+                                class="block w-full rounded-xl border-0 px-3.5 py-2.5 pr-10 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-tosca-600 sm:text-sm">
+                            <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600">
+                                <span x-text="showPass ? 'Sembunyi' : 'Lihat'" class="text-xs font-medium"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember" name="remember" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-tosca-700 focus:ring-tosca-600">
+                            <label for="remember" class="ml-2 block text-sm text-slate-600">Ingat sesi saya</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="flex w-full justify-center rounded-xl bg-tosca-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-tosca-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-tosca-700 transition duration-150">
+                            Masuk ke Sistem
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Panel Quick Demo Login untuk Memudahkan Pengujian -->
+                <div class="mt-8 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200/80">
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Akses Cepat Akun Demo (Klik untuk isi)</p>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button type="button" @click="userField = 'admin_pustaka'; passField = 'Admin123!'"
+                            class="flex flex-col items-start rounded-lg bg-white p-2.5 text-left shadow-sm ring-1 ring-slate-200 hover:ring-tosca-600 transition">
+                            <span class="text-xs font-bold text-tosca-800">Pustakawan</span>
+                            <span class="text-[11px] text-slate-500">admin_pustaka</span>
+                        </button>
+                        <button type="button" @click="userField = 'arip_dev'; passField = 'Member123!'"
+                            class="flex flex-col items-start rounded-lg bg-white p-2.5 text-left shadow-sm ring-1 ring-slate-200 hover:ring-tosca-600 transition">
+                            <span class="text-xs font-bold text-slate-800">Peminjam</span>
+                            <span class="text-[11px] text-slate-500">arip_dev</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

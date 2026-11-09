@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% extends "layouts/base_dashboard.html" %}
+{% block title %}Dashboard Pustakawan — ToscaLib{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Ringkasan Perpustakaan</h1>
+    <p class="mt-1 text-sm text-slate-500">Pantau aktivitas sirkulasi dan status inventaris hari ini.</p>
+</div>
+
+<!-- Kartu Statistik -->
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- Total Buku -->
+    <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <p class="text-sm font-medium text-slate-500">Total Judul Buku</p>
+        <p class="mt-2 text-3xl font-bold text-slate-900">{{ total_books }}</p>
+    </div>
+
+    <!-- Peminjaman Berjalan -->
+    <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 border-b-4 border-b-tosca-500">
+        <p class="text-sm font-medium text-slate-500">Peminjaman Aktif</p>
+        <p class="mt-2 text-3xl font-bold text-tosca-600">{{ active_loans }}</p>
+    </div>
+
+    <!-- Menunggu Persetujuan -->
+    <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 border-b-4 border-b-amber-500">
+        <p class="text-sm font-medium text-slate-500">Menunggu Persetujuan</p>
+        <p class="mt-2 text-3xl font-bold text-amber-500">{{ pending_loans }}</p>
+    </div>
+
+    <!-- Total Anggota -->
+    <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <p class="text-sm font-medium text-slate-500">Anggota Terdaftar</p>
+        <p class="mt-2 text-3xl font-bold text-slate-900">{{ total_members }}</p>
+    </div>
+</div>
+
+<div class="mt-8 rounded-xl bg-tosca-50/70 p-6 ring-1 ring-tosca-200">
+    <h3 class="text-sm font-bold text-tosca-900">Siap untuk langkah berikutnya!</h3>
+    <p class="mt-1 text-sm text-tosca-800">
+        Panel Dashboard Admin sudah berhasil dibuat. Pada langkah selanjutnya kita akan mengaktifkan menu <strong>Katalog Buku</strong> agar admin bisa menambah/mengedit buku.
+    </p>
+</div>
+{% endblock %}
+</body>
+</html>
